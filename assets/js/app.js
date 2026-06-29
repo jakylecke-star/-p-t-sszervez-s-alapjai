@@ -1,4 +1,5 @@
 const DATA = window.PLATFORM_DATA;
+const V3 = window.MODULE_CONTENT_V3 || {};
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
@@ -7,11 +8,44 @@ function escapeHtml(str){
 }
 function moduleImage(m){ return `<img class="card-img" src="${m.image}" alt="${escapeHtml(m.title)} ábra">`; }
 function tags(list){ return `<div class="tag-list">${list.slice(0,8).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>`; }
+function extraFor(id){ return V3[id] || null; }
+function renderV3Content(extra){
+  if(!extra) return '';
+  const theory = (extra.theorySections || []).map(sec => `
+    <section class="article-section">
+      <h4>${escapeHtml(sec.title)}</h4>
+      ${(sec.paragraphs || []).map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+    </section>`).join('');
+  const conceptGroups = (extra.conceptGroups || []).map(group => `
+    <div class="concept-group">
+      <h4>${escapeHtml(group.title)}</h4>
+      <ul>${(group.items || []).map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+    </div>`).join('');
+  const tasks = (extra.studentTasks || []).map((t,i) => `<li><strong>${i+1}. feladat:</strong> ${escapeHtml(t)}</li>`).join('');
+  const questions = (extra.questionBank || []).map((qa,i)=>`
+    <details class="qa v3-qa"><summary>${i+1}. ${escapeHtml(qa.q)}</summary><p>${escapeHtml(qa.a)}</p></details>`).join('');
+  return `
+    <div class="v3-content">
+      <div class="v3-ribbon">
+        <span>${escapeHtml(extra.versionLabel || 'V3 bővített tartalom')}</span>
+        ${extra.source ? `<small>${escapeHtml(extra.source)}</small>` : ''}
+      </div>
+      ${extra.overview ? `<section class="overview-box"><h4>Tanulói olvasmány – áttekintés</h4><p>${escapeHtml(extra.overview)}</p></section>` : ''}
+      ${extra.keyIdea ? `<section class="key-idea"><strong>Kulcsgondolat:</strong> ${escapeHtml(extra.keyIdea)}</section>` : ''}
+      ${theory ? `<div class="article-stack"><h4 class="stack-title">Részletes tananyag</h4>${theory}</div>` : ''}
+      ${conceptGroups ? `<div class="concept-grid">${conceptGroups}</div>` : ''}
+      ${tasks ? `<section class="task-box"><h4>Tanulói feladatok</h4><ol>${tasks}</ol></section>` : ''}
+      ${extra.teacherNote ? `<section class="teacher-note"><h4>Tanári használati javaslat</h4><p>${escapeHtml(extra.teacherNote)}</p></section>` : ''}
+      ${questions ? `<section class="v3-question-bank"><h4>Bővített kérdésbank</h4>${questions}</section>` : ''}
+    </div>`;
+}
 function renderModules(filter = ''){
   const q = filter.trim().toLowerCase();
   const wrap = $('#moduleGrid');
   const modules = DATA.modules.filter(m => {
-    const hay = [m.id,m.title,m.short,m.chapter,...m.blocks.map(b=>b.label),...m.blocks.map(b=>b.text)].join(' ').toLowerCase();
+    const extra = extraFor(m.id);
+    const extraText = extra ? JSON.stringify(extra) : '';
+    const hay = [m.id,m.title,m.short,m.chapter,...m.blocks.map(b=>b.label),...m.blocks.map(b=>b.text), extraText].join(' ').toLowerCase();
     return !q || hay.includes(q);
   });
   wrap.innerHTML = modules.map(m => `
@@ -43,6 +77,7 @@ function openModule(id){
   const m = DATA.modules.find(x => x.id === id);
   if(!m) return;
   const wrap = $('#moduleDetail');
+  const extra = extraFor(m.id);
   wrap.innerHTML = `
     <button class="close" type="button" aria-label="Modul bezárása">Bezárás ×</button>
     <div class="detail-hero">
@@ -57,6 +92,7 @@ function openModule(id){
           <div class="mini"><h4>Ellenőrző kérdések</h4><ul>${m.checks.map(c => `<li>${escapeHtml(c)}</li>`).join('')}</ul></div>
         </div>
         <div class="block-list">${m.blocks.map(b => `<div class="block"><strong>${escapeHtml(b.label)}</strong><span>${escapeHtml(b.text)}</span></div>`).join('')}</div>
+        ${renderV3Content(extra)}
         ${m.secondaryImage ? `<img class="secondary-img" src="${m.secondaryImage}" alt="${escapeHtml(m.title)} kiegészítő ábra">` : ''}
       </div>
     </div>`;
