@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Építésszervezés oktatói platform magasépítő technikus tananyaghoz.">
+  <title>Építésszervezés oktatói platform</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="hero" id="top">
+    <div class="hero-grid">
+      <div>
+        <h1>Építésszervezés oktatói platform</h1>
+        <p class="lead">GitHub Pages-re készített tanulói felület: modulokra bontott tananyag, javított infografikák, fogalomtár, ellenőrző kérdések és gyakorló kalkulátorok.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="btn primary" href="#modules">Modulok megnyitása</a>
+        <a class="btn" href="#practice">Gyakorlók</a>
+        <button class="btn" id="printBtn" type="button">Nyomtatás / PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Fő navigáció">
+    <div class="nav-inner">
+      <a href="#path">Tanulási út</a>
+      <a href="#modules">Modulok</a>
+      <a href="#detail">Részletes modulnézet</a>
+      <a href="#practice">Gyakorlók</a>
+      <a href="#glossary">Fogalomtár</a>
+      <a href="#visuals">Ábratár</a>
+      <a href="#github">GitHub</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section" id="path">
+      <div class="section-head">
+        <div>
+          <h2>Tanulási útvonal</h2>
+          <p class="sub">A tananyag logikája: az építési projekt indulásától az üzemeltetésig.</p>
+        </div>
+      </div>
+      <div class="learning-path" id="learningPath"></div>
+    </section>
+
+    <section class="section" id="modules">
+      <div class="section-head">
+        <div>
+          <h2>Tananyagmodulok</h2>
+          <p class="sub">Kattints bármelyik kártyára: megnyílik a részletes tanulói blokk célokkal, magyarázattal és ellenőrző kérdésekkel.</p>
+        </div>
+        <div class="toolbar">
+          <input class="search" id="moduleSearch" type="search" placeholder="Keresés modulban, fogalomban…" aria-label="Modul keresése">
+        </div>
+      </div>
+      <div class="module-grid" id="moduleGrid"></div>
+    </section>
+
+    <section class="section" id="detail">
+      <div class="section-head">
+        <div>
+          <h2>Részletes modulnézet</h2>
+          <p class="sub">A kiválasztott modul itt jelenik meg. A szerkezet később fejezetenként teljes tanulói oldalra bővíthető.</p>
+        </div>
+      </div>
+      <div class="detail" id="moduleDetail"></div>
+    </section>
+
+    <section class="section" id="practice">
+      <div class="section-head">
+        <div>
+          <h2>Gyakorló kalkulátorok</h2>
+          <p class="sub">Az első interaktív elemek: mennyiségszámítás, költségvetési tétel és időigény becslése.</p>
+        </div>
+      </div>
+      <div class="practice-grid">
+        <article class="card practice-card">
+          <h3>Mennyiségszámítás: falazat → raklap</h3>
+          <p>Téglaszükséglet és rendelési egység becslése tartalékkal.</p>
+          <div class="form-grid">
+            <div class="field"><label for="falM3">Falazat mennyisége m³</label><input id="falM3" type="number" value="12" min="0" step="0.1"></div>
+            <div class="field"><label for="teglaDbM3">Tégla db / m³</label><input id="teglaDbM3" type="number" value="450" min="0" step="1"></div>
+            <div class="field"><label for="raklapDb">Db / raklap</label><input id="raklapDb" type="number" value="60" min="1" step="1"></div>
+            <div class="field"><label for="tartalek">Tartalék %</label><input id="tartalek" type="number" value="10" min="0" step="1"></div>
+          </div>
+          <div class="result" id="mennyisegResult"></div>
+        </article>
+
+        <article class="card practice-card">
+          <h3>Költségvetési tétel kalkulátor</h3>
+          <p>Anyag, munkadíj, gépköltség, egységár és bruttó összeg.</p>
+          <div class="form-grid">
+            <div class="field"><label for="kvMenny">Mennyiség</label><input id="kvMenny" type="number" value="12" min="0" step="0.1"></div>
+            <div class="field"><label for="anyagEgysegar">Anyag egységár Ft</label><input id="anyagEgysegar" type="number" value="22000" min="0" step="100"></div>
+            <div class="field"><label for="normaido">Normaidő óra/egység</label><input id="normaido" type="number" value="1.8" min="0" step="0.1"></div>
+            <div class="field"><label for="oradij">Óradíj Ft</label><input id="oradij" type="number" value="3500" min="0" step="100"></div>
+            <div class="field"><label for="gepkoltseg">Gépköltség Ft</label><input id="gepkoltseg" type="number" value="0" min="0" step="100"></div>
+            <div class="field"><label for="afa">ÁFA %</label><input id="afa" type="number" value="27" min="0" step="1"></div>
+          </div>
+          <div class="result" id="koltsegResult"></div>
+        </article>
+
+        <article class="card practice-card">
+          <h3>Időigény becslése normából</h3>
+          <p>A norma szerinti összes munkaidő és becsült időtartam.</p>
+          <div class="form-grid">
+            <div class="field"><label for="idoMenny">Mennyiség</label><input id="idoMenny" type="number" value="12" min="0" step="0.1"></div>
+            <div class="field"><label for="idoNorma">Normaidő óra/egység</label><input id="idoNorma" type="number" value="1.8" min="0" step="0.1"></div>
+            <div class="field"><label for="letszam">Létszám fő</label><input id="letszam" type="number" value="3" min="1" step="1"></div>
+            <div class="field"><label for="napiOra">Napi munkaóra</label><input id="napiOra" type="number" value="8" min="1" step="0.5"></div>
+          </div>
+          <div class="result" id="idoResult"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="quiz">
+      <div class="section-head">
+        <div>
+          <h2>Gyors ellenőrző kérdések</h2>
+          <p class="sub">Lenyitható válaszokkal. Ez a rész később fejezetenkénti kérdésbankká bővíthető.</p>
+        </div>
+      </div>
+      <div class="quiz-list" id="quizList"></div>
+    </section>
+
+    <section class="section" id="glossary">
+      <div class="section-head">
+        <div>
+          <h2>Fogalomtár</h2>
+          <p class="sub">Kereshető alapfogalmak a tananyaghoz.</p>
+        </div>
+        <div class="toolbar">
+          <input class="search" id="termSearch" type="search" placeholder="Fogalom keresése…" aria-label="Fogalom keresése">
+        </div>
+      </div>
+      <div class="glossary" id="glossaryGrid"></div>
+    </section>
+
+    <section class="section" id="visuals">
+      <div class="section-head">
+        <div>
+          <h2>Ábratár</h2>
+          <p class="sub">A javított, olvasható infografikák teljes méretben is megnyithatók.</p>
+        </div>
+      </div>
+      <div class="gallery" id="visualGallery"></div>
+    </section>
+
+    <section class="section" id="github">
+      <div class="section-head">
+        <div>
+          <h2>GitHub Pages csomag</h2>
+          <p class="sub">A mappa statikus: az `index.html`, `assets`, `data` és `docs` együtt feltölthető GitHubra.</p>
+        </div>
+      </div>
+      <article class="card practice-card">
+        <h3>Következő fejlesztési kör</h3>
+        <p>Innen érdemes fejezetenként teljes oldalakat építeni: 1. tananyag, 2. ábra, 3. példa, 4. tanulói feladat, 5. ellenőrző kérdés, 6. letölthető sablon. A jelenlegi oldal már működő keret, amelybe ezeket modulonként be lehet illeszteni.</p>
+        <div class="tag-list">
+          <span class="tag">statikus HTML</span><span class="tag">mobilbarát</span><span class="tag">kereshető fogalomtár</span><span class="tag">interaktív kalkulátor</span><span class="tag">ábratár</span>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Építésszervezés oktatói platform – v2 prototípus</span>
+      <span class="small-note">A publikus közzététel előtt ellenőrizd a forrásanyag megosztási jogosultságát.</span>
+    </div>
+  </footer>
+
+  <script src="data/platform-data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
