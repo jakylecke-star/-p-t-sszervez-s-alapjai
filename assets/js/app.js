@@ -81,7 +81,12 @@ function openModule(id){
   wrap.innerHTML = `
     <button class="close" type="button" aria-label="Modul bezárása">Bezárás ×</button>
     <div class="detail-hero">
-      <img src="${m.image}" alt="${escapeHtml(m.title)} részletes ábra">
+      <figure class="detail-visual">
+        <a href="${m.image}" target="_blank" rel="noopener" title="Ábra megnyitása teljes méretben">
+          <img src="${m.image}" alt="${escapeHtml(m.title)} részletes ábra">
+        </a>
+        <figcaption>Ábra megnyitása teljes méretben ↗</figcaption>
+      </figure>
       <div class="detail-content">
         <span class="pill">${m.id}</span><span class="pill">${escapeHtml(m.chapter)}</span>
         <h3>${escapeHtml(m.title)}</h3>
@@ -93,7 +98,7 @@ function openModule(id){
         </div>
         <div class="block-list">${m.blocks.map(b => `<div class="block"><strong>${escapeHtml(b.label)}</strong><span>${escapeHtml(b.text)}</span></div>`).join('')}</div>
         ${renderV3Content(extra)}
-        ${m.secondaryImage ? `<img class="secondary-img" src="${m.secondaryImage}" alt="${escapeHtml(m.title)} kiegészítő ábra">` : ''}
+        ${m.secondaryImage ? `<a class="secondary-link" href="${m.secondaryImage}" target="_blank" rel="noopener"><img class="secondary-img" src="${m.secondaryImage}" alt="${escapeHtml(m.title)} kiegészítő ábra"></a>` : ''}
       </div>
     </div>`;
   wrap.classList.add('active');
